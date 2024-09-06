@@ -1,0 +1,19 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CollectThemedMauiImageAssets">
+    <ItemGroup>
+        <_ThemedMauiImages Include="@(ThemedMauiImage)" />
+        <_LowercaseThemedMauiImages Include="@(_ThemedMauiImages)" ThemeName="$([System.String]::Copy('%(_ThemedMauiImages.ThemeName)').Replace(' ', '').ToLower())" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ProcessThemedMauiImageAssets" BeforeTargets="ResizetizeCollectItems" DependsOnTargets="CollectThemedMauiImageAssets">
+    <ItemGroup>
+        <MauiImage
+            Include="@(_LowercaseThemedMauiImages->'%(Identity)')"
+            Link="%(RecursiveDir)%(Filename)_%(_LowercaseThemedMauiImages.ThemeName)%(Extension)"
+            Visible="False" />
+    </ItemGroup>
+  </Target>
+
+</Project>
